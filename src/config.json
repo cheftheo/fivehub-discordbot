@@ -1,6 +1,6 @@
 {
-    "config": {
-        "token": "MTI1NjI3ODc0NTY1MjkyMDMzMA.G5p6Jl.6P3Ob1FTOcXz_89Ncd-Z6kkt9AkNnARxDVR4DQ",
-        "welcomeChannelId": "1256273608402276365"
-    }
+    "token": "MTI1NjI3ODc0NTY1MjkyMDMzMA.G5p6Jl.6P3Ob1FTOcXz_89Ncd-Z6kkt9AkNnARxDVR4DQ",
+    "welcomeChannelId": "1256273608402276365",
+    "clientId": "1256278745652920330",
+    "guildId": "1256267083554226196"
 }
