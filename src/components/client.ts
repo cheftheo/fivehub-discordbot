@@ -4,13 +4,14 @@ import path from 'path';
 import { Client, GatewayIntentBits, Collection } from 'discord.js';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
-// import { setupMenuCommand } from './commands';
+
 import config from '../config.json';
 import { sendWelcomeMessage } from './welcome';
-import { handleInteraction } from './interaction';
+import { verifyHandler } from './verify';
+import { handleInteraction, handleJoin, handleLeave } from './interaction';
 
 export class BotClient {
-    static client: Client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    static client: Client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers] });
     static rest: REST = new REST({ version: '9' }).setToken(config.token);
 
     static commands: Collection<string, any> = new Collection();
@@ -48,9 +49,6 @@ export class BotClient {
             }
         });
     }
-    // public getClient(): Client {
-    //     return BotClient.client;
-    // }
 
     async start() {
         try {
@@ -60,11 +58,27 @@ export class BotClient {
                 { body: commandsArray }
             );
 
-            console.log('Successfully registered application commands.');
             await BotClient.client.login(config.token);
-            BotClient.client.user?.setActivity('with mata');
+            // BotClient.client.on('ready', () => {
+            //     BotClient.client.user?.setActivity('with mata');
+
+            //     sendWelcomeMessage.init(BotClient.client);
+
+            //     handleInteraction(BotClient.client);
+            //     handleJoin(BotClient.client);
+            //     handleLeave(BotClient.client);
+
+            //     console.log('Bot is ready!');
+            // });
+
             sendWelcomeMessage.init(BotClient.client);
             handleInteraction(BotClient.client);
+            handleJoin(BotClient.client);
+            handleLeave(BotClient.client);
+            verifyHandler.init(BotClient.client);
+
+            console.log('Bot is ready!');
+
         } catch (error) {
             console.error('Failed to start the bot:', error);
         }

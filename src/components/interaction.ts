@@ -1,7 +1,8 @@
+import config from '../config.json';
+
 export const handleInteraction = (client: any) => {
-    console.log('Handling interactions...');
     client.on('interactionCreate', async (interaction: any) => {
-        if (!interaction.isSelectMenu()) return;
+        // if (!interaction.isSelectMenu()) return;
     
         if (interaction.customId === 'select-role') {
             const roleId = interaction.values[0];
@@ -20,5 +21,43 @@ export const handleInteraction = (client: any) => {
                 await interaction.reply({ content: 'Failed to assign role. Make sure I have the proper permissions!', ephemeral: true });
             }
         }
+
+        if (interaction.customId === 'verify-account') {
+            await interaction.deferUpdate();
+            await interaction.member.roles.add(config.verifiedRole);
+            await interaction.editReply({ content: 'You have been verified!' });
+        }
+    });
+}
+
+export const handleJoin = (client: any) => {
+    client.on('guildMemberAdd', async (member: any) => {
+        const channel = await client.channels.fetch(config.joining);
+    
+        const embed = {
+            color: 0x0099ff,
+            title: 'Welcome!',
+            description: `Welcome to the server, ${member.user.username}!`,
+            timestamp: new Date(),
+        };
+
+        channel.send({ embeds: [embed] });
+    });
+}
+
+export const handleLeave = (client: any) => {
+    client.on('guildMemberRemove', async (member: any) => {
+        const channel = await client.channels.fetch(config.joining);
+
+        const embed = {
+            color: 0x0099ff,
+            title: 'Goodbye!',
+            description: `Goodbye, ${member.user.username}!`,
+            timestamp: new Date(),
+        };
+
+        channel.send({ embeds: [embed] });
+
+        console.log(`Goodbye, ${member.user.username}!`);
     });
 }
